@@ -7,16 +7,16 @@ const {
   deleteTask,
 } = require('../controllers/taskController');
 
-// GET    /tasks        — get all tasks
+// Получить все задачи
 router.get('/', getAllTasks);
 
-// POST   /tasks        — create task
+// Создать задачу
 router.post('/', createTask);
 
-// PUT    /tasks/:id    — update task status
+// Обновить статус задачи
 router.put('/:id', updateTaskStatus);
 
-// DELETE /tasks/:id    — delete task
+// Удалить задачу
 router.delete('/:id', deleteTask);
 
 module.exports = router;

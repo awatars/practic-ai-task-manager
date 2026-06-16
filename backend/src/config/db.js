@@ -9,12 +9,12 @@ const pool = new Pool({
   database: process.env.DB_NAME || 'practic',
 });
 
-// Test connection on startup
+// Проверка подключения к базе данных при старте
 pool.connect((err, client, release) => {
   if (err) {
-    console.error('❌ Error connecting to PostgreSQL:', err.message);
+    console.error('Ошибка подключения к PostgreSQL:', err.message);
   } else {
-    console.log('✅ Connected to PostgreSQL successfully');
+    console.log('PostgreSQL подключен успешно');
     release();
   }
 });

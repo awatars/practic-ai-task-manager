@@ -7,7 +7,7 @@ const taskRoutes = require('./routes/taskRoutes');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
+// Подключение middleware
 app.use(cors({
   origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -15,27 +15,27 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Routes
+// Маршруты задач
 app.use('/tasks', taskRoutes);
 
-// Health check
+// Проверка работоспособности сервера
 app.get('/', (req, res) => {
-  res.json({ message: '🚀 AI Task Manager API is running', version: '1.0.0' });
+  res.json({ message: 'AI Task Manager API is running', version: '1.0.0' });
 });
 
-// 404 handler
+// Обработка несуществующих маршрутов
 app.use((req, res) => {
   res.status(404).json({ error: `Route ${req.method} ${req.url} not found` });
 });
 
-// Global error handler
+// Глобальный обработчик ошибок
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err.message);
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// Start server
+// Запуск сервера
 app.listen(PORT, () => {
-  console.log(`\n🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📋 Tasks API: http://localhost:${PORT}/tasks\n`);
+  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Tasks API: http://localhost:${PORT}/tasks`);
 });
