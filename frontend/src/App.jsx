@@ -44,47 +44,82 @@ export default function App() {
     setTasks((prev) => prev.filter((t) => t.id !== deletedId));
   };
 
+  // Подсчёт задач по статусам для шапки
+  const countByStatus = (status) => tasks.filter((t) => t.status === status).length;
+
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>AI Task Manager</h1>
-      </header>
+      {/* Фоновые анимированные элементы */}
+      <div className="bg-orb bg-orb-1" />
+      <div className="bg-orb bg-orb-2" />
+      <div className="bg-orb bg-orb-3" />
 
-      <main className="app-main">
-        <div className="content-grid">
-          <aside className="sidebar">
-            <TaskForm onTaskCreated={handleTaskCreated} />
-          </aside>
-
-          <section className="tasks-section">
-            <div className="section-header">
-              <h2>Список задач</h2>
-              <button
-                id="refresh-btn"
-                className="btn-refresh"
-                onClick={loadTasks}
-              >
-                Обновить
-              </button>
+      <div className="app-container">
+        {/* Шапка с логотипом и статистикой */}
+        <header className="app-header">
+          <div className="header-logo">
+            <span className="logo-icon">&#x2B21;</span>
+            <span className="logo-text">AI Task Manager</span>
+          </div>
+          <div className="header-stats">
+            <div className="stat">
+              <span className="stat-value">{countByStatus('new')}</span>
+              <span className="stat-label">Новые</span>
             </div>
+            <div className="stat-divider" />
+            <div className="stat">
+              <span className="stat-value stat-yellow">{countByStatus('in_progress')}</span>
+              <span className="stat-label">В работе</span>
+            </div>
+            <div className="stat-divider" />
+            <div className="stat">
+              <span className="stat-value stat-green">{countByStatus('done')}</span>
+              <span className="stat-label">Готово</span>
+            </div>
+          </div>
+        </header>
 
-            {loading ? (
-              <p>Загрузка задач...</p>
-            ) : error ? (
-              <div className="error-state">
-                <span>{error}</span>
-                <button onClick={loadTasks} className="btn-retry">Повторить</button>
+        {/* Основной контент */}
+        <main className="app-main">
+          <div className="content-grid">
+            <aside className="sidebar">
+              <TaskForm onTaskCreated={handleTaskCreated} />
+            </aside>
+
+            <section className="tasks-section">
+              <div className="section-header">
+                <h1 className="section-title">Список задач</h1>
+                <button
+                  id="refresh-btn"
+                  className="btn-refresh"
+                  onClick={loadTasks}
+                  title="Обновить список"
+                >
+                  &#8635;
+                </button>
               </div>
-            ) : (
-              <TaskTable
-                tasks={tasks}
-                onTaskUpdated={handleTaskUpdated}
-                onTaskDeleted={handleTaskDeleted}
-              />
-            )}
-          </section>
-        </div>
-      </main>
+
+              {loading ? (
+                <div className="loading-state">
+                  <div className="loading-spinner" />
+                  <p>Загрузка задач...</p>
+                </div>
+              ) : error ? (
+                <div className="error-state">
+                  <span>{error}</span>
+                  <button onClick={loadTasks} className="btn-retry">Повторить</button>
+                </div>
+              ) : (
+                <TaskTable
+                  tasks={tasks}
+                  onTaskUpdated={handleTaskUpdated}
+                  onTaskDeleted={handleTaskDeleted}
+                />
+              )}
+            </section>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

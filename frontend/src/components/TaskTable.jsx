@@ -1,10 +1,11 @@
 import { updateTaskStatus, deleteTask } from '../api/tasks';
+import './TaskTable.css';
 
-// Маппинг статусов на русские названия
-const STATUS_LABELS = {
-  new: 'Новая',
-  in_progress: 'В работе',
-  done: 'Готово',
+// Маппинг статусов на русские названия и CSS-классы
+const STATUS_CONFIG = {
+  new: { label: 'Новая', cls: 'status-new' },
+  in_progress: { label: 'В работе', cls: 'status-in-progress' },
+  done: { label: 'Готово', cls: 'status-done' },
 };
 
 // Форматирование даты в читаемый вид
@@ -48,50 +49,63 @@ export default function TaskTable({ tasks, onTaskUpdated, onTaskDeleted }) {
 
   return (
     <div className="task-table-wrapper">
-      <table className="task-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Название</th>
-            <th>Описание</th>
-            <th>Статус</th>
-            <th>Дата создания</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tasks.map((task) => (
-            <tr key={task.id}>
-              <td>{task.id}</td>
-              <td className="task-title">{task.title}</td>
-              <td className="task-description">
-                {task.description || '—'}
-              </td>
-              <td>
-                <select
-                  id={`status-select-${task.id}`}
-                  value={task.status}
-                  onChange={(e) => handleStatusChange(task.id, e.target.value)}
-                >
-                  <option value="new">Новая</option>
-                  <option value="in_progress">В работе</option>
-                  <option value="done">Готово</option>
-                </select>
-              </td>
-              <td>{formatDate(task.created_at)}</td>
-              <td>
-                <button
-                  id={`delete-btn-${task.id}`}
-                  className="btn-delete"
-                  onClick={() => handleDelete(task.id, task.title)}
-                >
-                  Удалить
-                </button>
-              </td>
+      <div className="task-table-header">
+        <span className="task-count">{tasks.length} задач(а)</span>
+      </div>
+      <div className="task-table-scroll">
+        <table className="task-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Название</th>
+              <th>Описание</th>
+              <th>Статус</th>
+              <th>Дата создания</th>
+              <th>Действия</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {tasks.map((task) => {
+              const statusInfo = STATUS_CONFIG[task.status] || STATUS_CONFIG.new;
+              return (
+                <tr key={task.id} className="task-row">
+                  <td className="task-id">{task.id}</td>
+                  <td className="task-title">{task.title}</td>
+                  <td className="task-description">
+                    {task.description || <span className="no-desc">--</span>}
+                  </td>
+                  <td className="task-status-cell">
+                    <span className={`status-badge ${statusInfo.cls}`}>
+                      {statusInfo.label}
+                    </span>
+                    <select
+                      id={`status-select-${task.id}`}
+                      className="status-select"
+                      value={task.status}
+                      onChange={(e) => handleStatusChange(task.id, e.target.value)}
+                    >
+                      <option value="new">Новая</option>
+                      <option value="in_progress">В работе</option>
+                      <option value="done">Готово</option>
+                    </select>
+                  </td>
+                  <td className="task-date">{formatDate(task.created_at)}</td>
+                  <td className="task-actions">
+                    <button
+                      id={`delete-btn-${task.id}`}
+                      className="btn-delete"
+                      onClick={() => handleDelete(task.id, task.title)}
+                      title="Удалить задачу"
+                    >
+                      &#x2715;
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

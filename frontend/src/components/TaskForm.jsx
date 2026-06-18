@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { createTask } from '../api/tasks';
+import './TaskForm.css';
 
 export default function TaskForm({ onTaskCreated }) {
   const [title, setTitle] = useState('');
@@ -31,8 +32,8 @@ export default function TaskForm({ onTaskCreated }) {
 
   return (
     <div className="task-form-card">
-      <h2>Новая задача</h2>
-      <form onSubmit={handleSubmit}>
+      <h2 className="task-form-title">Новая задача</h2>
+      <form onSubmit={handleSubmit} className="task-form">
         <div className="form-group">
           <label htmlFor="task-title">Название</label>
           <input
@@ -41,6 +42,7 @@ export default function TaskForm({ onTaskCreated }) {
             placeholder="Введите название задачи..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            className="form-input"
             disabled={loading}
           />
         </div>
@@ -51,13 +53,20 @@ export default function TaskForm({ onTaskCreated }) {
             placeholder="Подробное описание (необязательно)..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            className="form-input form-textarea"
             rows={3}
             disabled={loading}
           />
         </div>
         {error && <div className="form-error">{error}</div>}
         <button type="submit" className="btn-create" disabled={loading}>
-          {loading ? 'Создание...' : 'Создать задачу'}
+          {loading ? (
+            <span className="btn-loading">
+              <span className="spinner"></span> Создание...
+            </span>
+          ) : (
+            '+ Создать задачу'
+          )}
         </button>
       </form>
     </div>
