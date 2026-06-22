@@ -60,7 +60,7 @@ export default function App() {
           <div className="header-logo">
             <span className="logo-icon">&#x2B21;</span>
             <span className="logo-text">AI Task Manager</span>
-          </div>
+          </div>  
           <div className="header-stats">
             <div className="stat">
               <span className="stat-value">{countByStatus('new')}</span>

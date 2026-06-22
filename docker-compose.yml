@@ -1,0 +1,49 @@
+# Docker Compose — запуск всех сервисов одной командой
+# Использование: docker compose up --build
+
+services:
+  # База данных PostgreSQL
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    container_name: task-manager-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: VLAD.vlad2005%
+      POSTGRES_DB: practic
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Backend — Node.js + Express API
+  backend:
+    build: ./backend
+    container_name: task-manager-backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: VLAD.vlad2005%
+      DB_NAME: practic
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+
+  # Frontend — React (собранный, раздается через nginx)
+  frontend:
+    build: ./frontend
+    container_name: task-manager-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

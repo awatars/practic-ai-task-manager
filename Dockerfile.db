@@ -1,0 +1,4 @@
+FROM postgres:16-alpine
+
+# Копируем скрипт инициализации внутрь образа
+COPY backend/sql/init.sql /docker-entrypoint-initdb.d/init.sql
